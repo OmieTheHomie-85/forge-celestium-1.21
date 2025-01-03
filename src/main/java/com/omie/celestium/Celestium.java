@@ -1,6 +1,7 @@
 package com.omie.celestium;
 
 import com.mojang.logging.LogUtils;
+import com.omie.celestium.events.PlayerDeathHandler;
 import com.omie.celestium.item.ModItems;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
@@ -22,6 +23,10 @@ import org.slf4j.Logger;
 public class Celestium {
     // Define mod id in a common place for everything to reference
     public static final String MOD_ID = "celestium";
+
+    //Key for raw celestium
+    public static final String rCELESTIUM_EAT_COUNT_KEY = "raw_celestium_eat_count";
+
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -31,6 +36,7 @@ public class Celestium {
         modEventBus.addListener(this::commonSetup);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new PlayerDeathHandler());
 
         ModItems.register(modEventBus);
 
