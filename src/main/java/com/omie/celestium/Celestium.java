@@ -1,6 +1,8 @@
 package com.omie.celestium;
 
 import com.mojang.logging.LogUtils;
+import com.omie.celestium.events.KeybindEventHandler;
+import com.omie.celestium.events.ModEvents;
 import com.omie.celestium.events.PlayerDeathHandler;
 import com.omie.celestium.item.ModItems;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -37,6 +39,8 @@ public class Celestium {
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new PlayerDeathHandler());
+        MinecraftForge.EVENT_BUS.register(new KeybindEventHandler());
+        MinecraftForge.EVENT_BUS.register(new ModEvents());
 
         ModItems.register(modEventBus);
 
@@ -54,6 +58,7 @@ public class Celestium {
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
         if(event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             event.accept(ModItems.RAW_CELESTIUM);
+            event.accept(ModItems.PROCESSED_CELESTIUM);
         }
 
 
