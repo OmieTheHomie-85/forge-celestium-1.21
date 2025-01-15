@@ -1,4 +1,4 @@
-package com.omie.celestium;
+package com.omie.celestium.Keybinds;
 
 import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;

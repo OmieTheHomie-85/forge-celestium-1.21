@@ -1,8 +1,19 @@
 package com.omie.celestium.networking.Packets;
 
 import com.omie.celestium.PlayerStats.PlayerStats;
+import com.omie.celestium.PlayerStats.PlayerStatsProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.minecraftforge.network.NetworkContext;
+import net.minecraftforge.network.NetworkInstance;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraft.network.protocol.Packet;
+
+
+import java.util.function.Supplier;
+
 
 public class SyncPlayerStatsPacket {
     private final int level;
@@ -17,6 +28,7 @@ public class SyncPlayerStatsPacket {
         this.agility = agility;
         this.statPoints = statPoints;
     }
+
     // Encode data to send
     public static void encode(SyncPlayerStatsPacket packet, FriendlyByteBuf buffer) {
         buffer.writeInt(packet.level);
@@ -27,23 +39,26 @@ public class SyncPlayerStatsPacket {
 
     // Decode data when received
     public static SyncPlayerStatsPacket decode(FriendlyByteBuf buffer) {
-        return new SyncPlayerStatsPacket(
-                buffer.readInt(),
-                buffer.readInt(),
-                buffer.readInt(),
-                buffer.readInt()
-        );
+        return new SyncPlayerStatsPacket(buffer.readInt(), buffer.readInt(), buffer.readInt(), buffer.readInt());
     }
-//    public static void handle(SyncPlayerStatsPacket packet, Supplier<NetworkEvent.Context> context) {
-//        context.get().enqueueWork(() -> {
-//            // Update the player's stats on the client
-//            Minecraft.getInstance().player.getCapability(PlayerStats.INSTANCE).ifPresent(stats -> {
-//                stats.setLevel(packet.level);
-//                stats.setStrength(packet.strength);
-//                stats.setAgility(packet.agility);
-//                stats.setStatPoints(packet.statPoints);
-//            });
-//        });
-//        context.get().setPacketHandled(true);
-//    }
+
+    // Packet Handler
+    public static void handle(SyncPlayerStatsPacket packet, CustomPayloadEvent.Context ctx) {
+
+
+        ctx.enqueueWork(() -> {
+            // Ensure the player exists before updating stats
+            if (Minecraft.getInstance().player != null) {
+                Minecraft.getInstance().player.getCapability(PlayerStatsProvider.PLAYER_STATS).ifPresent(stats -> {
+                    stats.setLevel(packet.level);
+                    stats.setStrength(packet.strength);
+                    stats.setAgility(packet.agility);
+                    stats.setStatPoints(packet.statPoints);
+                });
+            }
+        });
+
+        ctx.setPacketHandled(true);
+
+    }
 }

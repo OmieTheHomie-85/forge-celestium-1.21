@@ -1,7 +1,7 @@
 package com.omie.celestium;
 
 import com.mojang.logging.LogUtils;
-import com.omie.celestium.events.KeybindEventHandler;
+import com.omie.celestium.Keybinds.KeybindEventHandler;
 import com.omie.celestium.events.ModEvents;
 import com.omie.celestium.events.PlayerDeathHandler;
 import com.omie.celestium.item.ModItems;
@@ -60,8 +60,6 @@ public class Celestium {
             event.accept(ModItems.RAW_CELESTIUM);
             event.accept(ModItems.PROCESSED_CELESTIUM);
         }
-
-
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call

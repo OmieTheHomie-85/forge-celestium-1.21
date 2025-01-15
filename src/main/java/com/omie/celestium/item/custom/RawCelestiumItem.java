@@ -23,9 +23,8 @@ public class RawCelestiumItem extends Item {
         if (entity instanceof Player player){
             int count = player.getPersistentData().getInt(rCELESTIUM_EAT_COUNT_KEY) + 1;
             player.getPersistentData().putInt(rCELESTIUM_EAT_COUNT_KEY, count);
-            if (count >= 3) {
-                if (player instanceof ServerPlayer) {
-                    ServerPlayer serverPlayer = (ServerPlayer)player;
+            if  (count >= 3){
+                if (player instanceof ServerPlayer serverPlayer) {
                     if (serverPlayer.gameMode.getGameModeForPlayer() != GameType.CREATIVE) {
                         serverPlayer.kill();
                     }
